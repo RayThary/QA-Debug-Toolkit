@@ -1,0 +1,34 @@
+## Inspector Settings
+
+QAToolkit Prefab은 QA Overlay, Runtime Info, Screenshot, Issue UI 참조가 기본 연결된 상태로 구성되어 있습니다.
+일반 사용 시에는 Canvas Settings, Save Settings, Toolkit Settings 정도만 확인하면 됩니다.
+
+* **Canvas Settings**
+  QA Overlay의 정렬 순서, 기준 해상도, 화면 비율 대응 방식을 설정합니다.
+
+* **Save Settings**
+  QA Toolkit에서 생성되는 JSON, TXT, Screenshot 파일의 저장 위치를 설정합니다.
+  Project Folder, App Data, Custom Path 중 선택할 수 있습니다.
+
+* **Toolkit Settings**
+  Play 시작 시 Overlay 표시 여부, Canvas 설정 자동 적용, TMP 폰트 자동 적용 여부를 설정합니다.
+
+* **Default Issues**
+  Issue Manager에서 기본 이슈 제목을 Inspector로 미리 등록할 수 있는 선택 기능입니다.
+  비워두면 기본 이슈는 생성되지 않습니다.
+
+## Issue Management
+
+Issue 기능은 Play 중 발견한 문제를 QA Overlay 안에서 바로 기록하고 관리하기 위한 기능입니다.
+
+* 새 이슈 생성 / 수정 / 삭제
+* 삭제 확인창
+* 제목 중복 방지
+* 제목 기준 Search / Filter
+* 멀티라인 Description 입력
+* JSON 저장 및 로드
+* 이슈별 TXT 리포트 Export
+* Google Sheets 붙여넣기용 Sheet TXT Export
+
+Issue 데이터에는 Title, Description, Created Time, Updated Time, Scene, Scene Time 정보가 저장됩니다.
+Export 버튼을 누르면 사람이 읽기 좋은 이슈별 TXT 리포트와 Google Sheets에 붙여넣기 쉬운 Sheet용 TXT 파일이 함께 생성됩니다.

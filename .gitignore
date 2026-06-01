@@ -1,0 +1,82 @@
+# This .gitignore file should be placed at the root of your Unity project directory
+# Source: https://github.com/github/gitignore/blob/main/Unity.gitignore
+
+# ─────────────────────────────
+# Unity generated folders
+# ─────────────────────────────
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# ─────────────────────────────
+# Addressables
+# ─────────────────────────────
+[Aa]ssets/AddressableAssetsData/*/*.bin*
+[Aa]ssets/StreamingAssets/aa.meta
+[Aa]ssets/StreamingAssets/aa/*
+
+# ─────────────────────────────
+# IDE & Editor folders
+# ─────────────────────────────
+.vs/
+.vscode/
+.idea/
+.consulo/
+Assets/Plugins/Editor/JetBrains*
+ExportedObj/
+
+# ─────────────────────────────
+# Visual Studio / Rider project files
+# ─────────────────────────────
+*.sln
+*.csproj
+*.unityproj
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.VC.db
+*.cache
+*.VisualElementsManifest.xml
+
+# ─────────────────────────────
+# Unity generated files
+# ─────────────────────────────
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# ─────────────────────────────
+# Crash reports and logs
+# ─────────────────────────────
+sysinfo.txt
+crashlytics-build.properties
+
+# ─────────────────────────────
+# Build artifacts
+# ─────────────────────────────
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# ─────────────────────────────
+# Backup & temp files
+# ─────────────────────────────
+*.backup
+*.backup.json
+*.json~
+*.bak
+*.unity.backup
