@@ -41,7 +41,7 @@ Assets/QADebugToolkit
 │  ├─ Core
 │  ├─ Issue
 │  └─ Screenshot
-└─ README```
+└─ README
 
 ## 실행 방법
 
