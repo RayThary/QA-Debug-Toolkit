@@ -1,3 +1,24 @@
+## Requirements
+
+이 툴킷은 아래 환경을 기준으로 제작되었습니다.
+
+* Unity 6
+* TextMeshPro
+* Input System
+
+TMP Font가 정상 표시되지 않는 경우 Unity의 TextMeshPro Essentials를 Import해야 합니다.
+
+## How to Use
+
+1. `Assets/QADebugToolkit/Prefabs` 폴더에서 `QAToolkit` Prefab을 원하는 Scene에 배치합니다.
+2. Play 모드에서 `F1` 키를 눌러 QA Overlay를 열고 닫습니다.
+3. Screenshot 버튼을 눌러 현재 Game View를 저장할 수 있습니다.
+4. Issue 버튼을 눌러 이슈 목록을 열고, 새 이슈 생성/수정/삭제를 진행할 수 있습니다.
+5. Save 버튼으로 Issue 데이터를 JSON 파일로 저장합니다.
+6. Export 버튼으로 TXT 리포트와 Sheet용 TXT 파일을 함께 생성합니다.
+
+데모 확인이 필요한 경우 `QAToolkitDemo` Scene을 실행하여 기본 구성 상태를 확인할 수 있습니다.
+
 ## Inspector Settings
 
 QAToolkit Prefab은 QA Overlay, Runtime Info, Screenshot, Issue UI 참조가 기본 연결된 상태로 구성되어 있습니다.
@@ -31,4 +52,16 @@ Issue 기능은 Play 중 발견한 문제를 QA Overlay 안에서 바로 기록�
 * Google Sheets 붙여넣기용 Sheet TXT Export
 
 Issue 데이터에는 Title, Description, Created Time, Updated Time, Scene, Scene Time 정보가 저장됩니다.
-Export 버튼을 누르면 사람이 읽기 좋은 이슈별 TXT 리포트와 Google Sheets에 붙여넣기 쉬운 Sheet용 TXT 파일이 함께 생성됩니다.
+
+## Export Output
+
+Export 버튼을 누르면 두 가지 파일이 함께 생성됩니다.
+
+* 이슈별 TXT 리포트
+  * 사람이 읽기 쉬운 상세 리포트 형식입니다.
+
+* Sheet용 TXT 파일
+  * 전체 이슈 목록을 Tab 구분 형식으로 출력합니다.
+  * Google Sheets에 복사/붙여넣기하여 표 형태로 정리할 수 있습니다.
+
+저장 파일은 Save Settings에서 지정한 경로 기준으로 생성됩니다.
