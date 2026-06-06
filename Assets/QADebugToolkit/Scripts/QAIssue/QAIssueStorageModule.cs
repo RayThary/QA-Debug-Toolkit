@@ -73,19 +73,21 @@ public class QAIssueStorageModule
             string fileName = "issues_" + safeTitle + ".txt";
             string reportPath = Path.Combine(issueFolderPath, fileName);
 
-            string reportText = string.Empty;
+            StringBuilder builder = new StringBuilder();
 
-            reportText += "Issue " + (i + 1) + System.Environment.NewLine;
-            reportText += "Title : " + issue.title + System.Environment.NewLine;
-            reportText += "Created Time : " + issue.createdTime + System.Environment.NewLine;
-            reportText += "Updated Time : " + issue.updatedTime + System.Environment.NewLine;
-            reportText += "Scene : " + issue.sceneName + System.Environment.NewLine;
-            reportText += "Scene Time : " + issue.sceneTime + System.Environment.NewLine;
-            reportText += System.Environment.NewLine;
-            reportText += "Description" + System.Environment.NewLine;
-            reportText += issue.description + System.Environment.NewLine;
+            builder.AppendLine("Issue " + (i + 1));
+            builder.AppendLine("Title : " + issue.title);
+            builder.AppendLine("Status : " + issue.status);
+            builder.AppendLine("Severity : " + issue.severity);
+            builder.AppendLine("Created Time : " + issue.createdTime);
+            builder.AppendLine("Updated Time : " + issue.updatedTime);
+            builder.AppendLine("Scene : " + issue.sceneName);
+            builder.AppendLine("Scene Time : " + issue.sceneTime);
+            builder.AppendLine();
+            builder.AppendLine("Description");
+            builder.AppendLine(issue.description);
 
-            File.WriteAllText(reportPath, reportText, Encoding.UTF8);
+            File.WriteAllText(reportPath, builder.ToString(), Encoding.UTF8);
 
             Debug.Log("QA Issue Report Exported : " + reportPath);
         }
@@ -105,7 +107,7 @@ public class QAIssueStorageModule
 
         StringBuilder builder = new StringBuilder();
 
-        builder.AppendLine("No\tIssue Id\tTitle\tCreated Time\tUpdated Time\tScene\tScene Time\tDescription");
+        builder.AppendLine("No\tIssue Id\tTitle\tStatus\tSeverity\tCreated Time\tUpdated Time\tScene\tScene Time\tDescription");
 
         for (int i = 0; i < issues.Count; i++)
         {
@@ -119,6 +121,10 @@ public class QAIssueStorageModule
             builder.Append(CleanSheetCell(issue.issueId));
             builder.Append('\t');
             builder.Append(CleanSheetCell(issue.title));
+            builder.Append('\t');
+            builder.Append(CleanSheetCell(issue.status));
+            builder.Append('\t');
+            builder.Append(CleanSheetCell(issue.severity));
             builder.Append('\t');
             builder.Append(CleanSheetCell(issue.createdTime));
             builder.Append('\t');

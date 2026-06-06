@@ -21,6 +21,8 @@ public class QAIssueManager : MonoBehaviour
     [Header("Issue Input")]
     [SerializeField] private TMP_InputField titleInput;
     [SerializeField] private TMP_InputField descriptionInput;
+    [SerializeField] private TMP_Dropdown statusDropdown;
+    [SerializeField] private TMP_Dropdown severityDropdown;
     [SerializeField] private QAToolkitMessageView messageView;
 
     [Header("Delete Confirm")]
@@ -48,8 +50,9 @@ public class QAIssueManager : MonoBehaviour
         dataModule.Setup(defaultIssueTitles);
         storageModule.Setup(qaToolkit);
 
-        viewModule.Setup(issueListWindow, issueWindow, issueWindowTitleText, titleInput, descriptionInput, messageView, issueListContent, issueButtonTemplate,
-            issueSearchInputField, deleteConfirmWindow, confirmDeleteButton, cancelDeleteButton, SelectIssue, StartNewIssue, ConfirmDeleteIssue, CancelDeleteIssue);
+        viewModule.Setup(issueListWindow, issueWindow, issueWindowTitleText, titleInput, descriptionInput, statusDropdown, severityDropdown, messageView,
+            issueListContent, issueButtonTemplate, issueSearchInputField, deleteConfirmWindow, confirmDeleteButton, cancelDeleteButton,
+            SelectIssue, StartNewIssue, ConfirmDeleteIssue, CancelDeleteIssue);
 
         QAIssueSaveData saveData = storageModule.LoadIssues();
 
@@ -186,6 +189,9 @@ public class QAIssueManager : MonoBehaviour
 
     public void ExportIssueReportToTxt()
     {
+        if (!SaveCurrentIssue(true))
+            return;
+
         SaveAllIssuesToJson();
 
         storageModule.ExportIssueReportToTxt(dataModule.Issues);
@@ -198,6 +204,8 @@ public class QAIssueManager : MonoBehaviour
     {
         string title = viewModule.GetTitleInput();
         string description = viewModule.GetDescriptionInput();
+        string status = viewModule.GetStatusInput();
+        string severity = viewModule.GetSeverityInput();
 
         if (string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(description))
             return true;
@@ -217,7 +225,7 @@ public class QAIssueManager : MonoBehaviour
 
         if (isNewIssueMode || !dataModule.IsValidIndex(selectedIssueIndex))
         {
-            int newIssueIndex = dataModule.AddIssue(title, description);
+            int newIssueIndex = dataModule.AddIssue(title, description, status, severity);
 
             selectedIssueIndex = newIssueIndex;
             isNewIssueMode = false;
@@ -228,7 +236,7 @@ public class QAIssueManager : MonoBehaviour
         }
         else
         {
-            dataModule.UpdateIssue(selectedIssueIndex, title, description);
+            dataModule.UpdateIssue(selectedIssueIndex, title, description, status, severity);
 
             QAIssueData issue = dataModule.GetIssue(selectedIssueIndex);
 

@@ -6,12 +6,20 @@ using UnityEngine.UI;
 
 public class QAIssueViewModule
 {
+    private const string DefaultStatus = "Open";
+    private const string DefaultSeverity = "Medium";
+
     private GameObject issueListWindow;
 
     private GameObject issueWindow;
     private TextMeshProUGUI issueWindowTitleText;
     private TMP_InputField titleInput;
     private TMP_InputField descriptionInput;
+
+    //여기
+    private TMP_Dropdown statusDropdown;
+    private TMP_Dropdown severityDropdown;
+
     private QAToolkitMessageView messageView;
 
     private Transform issueListContent;
@@ -30,7 +38,10 @@ public class QAIssueViewModule
     private Action onCancelDeleteIssue;
 
     public void Setup(GameObject issueListWindow, GameObject issueWindow, TextMeshProUGUI issueWindowTitleText,
-        TMP_InputField titleInput, TMP_InputField descriptionInput, QAToolkitMessageView messageView, Transform issueListContent,
+        TMP_InputField titleInput, TMP_InputField descriptionInput,
+        //여기
+        TMP_Dropdown statusDropdown, TMP_Dropdown severityDropdown,
+        QAToolkitMessageView messageView, Transform issueListContent,
         Button issueButtonTemplate, TMP_InputField issueSearchInputField, GameObject deleteConfirmWindow, Button confirmDeleteButton, Button cancelDeleteButton,
         Action<int> selectIssueCallback, Action startNewIssueCallback, Action confirmDeleteCallback, Action cancelDeleteCallback)
     {
@@ -40,6 +51,11 @@ public class QAIssueViewModule
         this.issueWindowTitleText = issueWindowTitleText;
         this.titleInput = titleInput;
         this.descriptionInput = descriptionInput;
+
+        //여기
+        this.statusDropdown = statusDropdown;
+        this.severityDropdown = severityDropdown;
+
         this.messageView = messageView;
 
         this.issueListContent = issueListContent;
@@ -194,6 +210,10 @@ public class QAIssueViewModule
         SetTitleInput(issue.title);
         SetDescriptionInput(issue.description);
 
+        //여기
+        SetStatusInput(issue.status);
+        SetSeverityInput(issue.severity);
+
         if (issueWindowTitleText != null)
             issueWindowTitleText.text = "Edit Issue";
 
@@ -214,6 +234,10 @@ public class QAIssueViewModule
     {
         SetTitleInput(string.Empty);
         SetDescriptionInput(string.Empty);
+
+        //여기
+        SetStatusInput(DefaultStatus);
+        SetSeverityInput(DefaultSeverity);
     }
 
     public string GetTitleInput()
@@ -232,6 +256,18 @@ public class QAIssueViewModule
         return descriptionInput.text.Trim();
     }
 
+    //여기
+    public string GetStatusInput()
+    {
+        return GetDropdownValue(statusDropdown, DefaultStatus);
+    }
+
+    //여기
+    public string GetSeverityInput()
+    {
+        return GetDropdownValue(severityDropdown, DefaultSeverity);
+    }
+
     public void SetTitleInput(string value)
     {
         if (titleInput != null)
@@ -242,6 +278,69 @@ public class QAIssueViewModule
     {
         if (descriptionInput != null)
             descriptionInput.text = value;
+    }
+
+    //여기
+    public void SetStatusInput(string value)
+    {
+        SetDropdownValue(statusDropdown, value, DefaultStatus);
+    }
+
+    //여기
+    public void SetSeverityInput(string value)
+    {
+        SetDropdownValue(severityDropdown, value, DefaultSeverity);
+    }
+
+    //여기
+    private string GetDropdownValue(TMP_Dropdown dropdown, string defaultValue)
+    {
+        if (dropdown == null || dropdown.options == null || dropdown.options.Count <= 0)
+            return defaultValue;
+
+        int index = dropdown.value;
+
+        if (index < 0 || index >= dropdown.options.Count)
+            return defaultValue;
+
+        string value = dropdown.options[index].text;
+
+        if (string.IsNullOrWhiteSpace(value))
+            return defaultValue;
+
+        return value;
+    }
+
+    //여기
+    private void SetDropdownValue(TMP_Dropdown dropdown, string value, string defaultValue)
+    {
+        if (dropdown == null || dropdown.options == null || dropdown.options.Count <= 0)
+            return;
+
+        string targetValue = string.IsNullOrWhiteSpace(value) ? defaultValue : value;
+
+        for (int i = 0; i < dropdown.options.Count; i++)
+        {
+            if (string.Equals(dropdown.options[i].text, targetValue, StringComparison.OrdinalIgnoreCase))
+            {
+                dropdown.SetValueWithoutNotify(i);
+                dropdown.RefreshShownValue();
+                return;
+            }
+        }
+
+        for (int i = 0; i < dropdown.options.Count; i++)
+        {
+            if (string.Equals(dropdown.options[i].text, defaultValue, StringComparison.OrdinalIgnoreCase))
+            {
+                dropdown.SetValueWithoutNotify(i);
+                dropdown.RefreshShownValue();
+                return;
+            }
+        }
+
+        dropdown.SetValueWithoutNotify(0);
+        dropdown.RefreshShownValue();
     }
 
     public void AddIssueButton(int issueIndex, string title)
