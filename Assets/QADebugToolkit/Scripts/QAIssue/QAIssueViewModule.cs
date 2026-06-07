@@ -16,7 +16,6 @@ public class QAIssueViewModule
     private TMP_InputField titleInput;
     private TMP_InputField descriptionInput;
 
-    //여기
     private TMP_Dropdown statusDropdown;
     private TMP_Dropdown severityDropdown;
 
@@ -39,7 +38,6 @@ public class QAIssueViewModule
 
     public void Setup(GameObject issueListWindow, GameObject issueWindow, TextMeshProUGUI issueWindowTitleText,
         TMP_InputField titleInput, TMP_InputField descriptionInput,
-        //여기
         TMP_Dropdown statusDropdown, TMP_Dropdown severityDropdown,
         QAToolkitMessageView messageView, Transform issueListContent,
         Button issueButtonTemplate, TMP_InputField issueSearchInputField, GameObject deleteConfirmWindow, Button confirmDeleteButton, Button cancelDeleteButton,
@@ -52,7 +50,6 @@ public class QAIssueViewModule
         this.titleInput = titleInput;
         this.descriptionInput = descriptionInput;
 
-        //여기
         this.statusDropdown = statusDropdown;
         this.severityDropdown = severityDropdown;
 
@@ -210,7 +207,6 @@ public class QAIssueViewModule
         SetTitleInput(issue.title);
         SetDescriptionInput(issue.description);
 
-        //여기
         SetStatusInput(issue.status);
         SetSeverityInput(issue.severity);
 
@@ -235,7 +231,6 @@ public class QAIssueViewModule
         SetTitleInput(string.Empty);
         SetDescriptionInput(string.Empty);
 
-        //여기
         SetStatusInput(DefaultStatus);
         SetSeverityInput(DefaultSeverity);
     }
@@ -256,13 +251,11 @@ public class QAIssueViewModule
         return descriptionInput.text.Trim();
     }
 
-    //여기
     public string GetStatusInput()
     {
         return GetDropdownValue(statusDropdown, DefaultStatus);
     }
 
-    //여기
     public string GetSeverityInput()
     {
         return GetDropdownValue(severityDropdown, DefaultSeverity);
@@ -280,19 +273,15 @@ public class QAIssueViewModule
             descriptionInput.text = value;
     }
 
-    //여기
     public void SetStatusInput(string value)
     {
         SetDropdownValue(statusDropdown, value, DefaultStatus);
     }
-
-    //여기
     public void SetSeverityInput(string value)
     {
         SetDropdownValue(severityDropdown, value, DefaultSeverity);
     }
 
-    //여기
     private string GetDropdownValue(TMP_Dropdown dropdown, string defaultValue)
     {
         if (dropdown == null || dropdown.options == null || dropdown.options.Count <= 0)
@@ -311,7 +300,6 @@ public class QAIssueViewModule
         return value;
     }
 
-    //여기
     private void SetDropdownValue(TMP_Dropdown dropdown, string value, string defaultValue)
     {
         if (dropdown == null || dropdown.options == null || dropdown.options.Count <= 0)
