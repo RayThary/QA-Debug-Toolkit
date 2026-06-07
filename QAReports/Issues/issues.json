@@ -7,18 +7,18 @@
             "status": "Open",
             "severity": "Medium",
             "createdTime": "2026-06-03 23:41:15",
-            "updatedTime": "2026-06-06 21:59:54",
+            "updatedTime": "2026-06-07 18:18:38",
             "sceneName": "QAToolkitDemo",
-            "sceneTime": "00:00"
+            "sceneTime": "00:05"
         },
         {
             "issueId": "ISSUE_20260603_234115338",
             "title": "2",
             "description": "",
-            "status": "Closed",
+            "status": "Retest",
             "severity": "Medium",
             "createdTime": "2026-06-03 23:41:15",
-            "updatedTime": "2026-06-07 14:22:04",
+            "updatedTime": "2026-06-07 18:18:49",
             "sceneName": "QAToolkitDemo",
             "sceneTime": "00:00"
         },

@@ -8,6 +8,7 @@ public class QAIssueViewModule
 {
     private const string DefaultStatus = "Open";
     private const string DefaultSeverity = "Medium";
+    private const string AllFilter = "All";
 
     private GameObject issueListWindow;
 
@@ -25,11 +26,15 @@ public class QAIssueViewModule
     private Button issueButtonTemplate;
     private TMP_InputField issueSearchInputField;
 
+    private TMP_Dropdown statusFilterDropdown;
+    private TMP_Dropdown severityFilterDropdown;
+
     private GameObject deleteConfirmWindow;
     private Button confirmDeleteButton;
     private Button cancelDeleteButton;
 
     private readonly List<Button> createdIssueButtons = new List<Button>();
+    private IReadOnlyList<QAIssueData> currentIssues;
 
     private Action<int> onSelectIssue;
     private Action onStartNewIssue;
@@ -40,7 +45,9 @@ public class QAIssueViewModule
         TMP_InputField titleInput, TMP_InputField descriptionInput,
         TMP_Dropdown statusDropdown, TMP_Dropdown severityDropdown,
         QAToolkitMessageView messageView, Transform issueListContent,
-        Button issueButtonTemplate, TMP_InputField issueSearchInputField, GameObject deleteConfirmWindow, Button confirmDeleteButton, Button cancelDeleteButton,
+        Button issueButtonTemplate, TMP_InputField issueSearchInputField,
+        TMP_Dropdown statusFilterDropdown, TMP_Dropdown severityFilterDropdown,
+        GameObject deleteConfirmWindow, Button confirmDeleteButton, Button cancelDeleteButton,
         Action<int> selectIssueCallback, Action startNewIssueCallback, Action confirmDeleteCallback, Action cancelDeleteCallback)
     {
         this.issueListWindow = issueListWindow;
@@ -59,6 +66,9 @@ public class QAIssueViewModule
         this.issueButtonTemplate = issueButtonTemplate;
         this.issueSearchInputField = issueSearchInputField;
 
+        this.statusFilterDropdown = statusFilterDropdown;
+        this.severityFilterDropdown = severityFilterDropdown;
+
         this.deleteConfirmWindow = deleteConfirmWindow;
         this.confirmDeleteButton = confirmDeleteButton;
         this.cancelDeleteButton = cancelDeleteButton;
@@ -69,7 +79,7 @@ public class QAIssueViewModule
         onCancelDeleteIssue = cancelDeleteCallback;
 
         SetupDeleteConfirmButtons();
-        SetupSearchInputField();
+        SetupSearchAndFilterInputs();
 
         SetIssueListWindow(false);
         SetIssueWindow(false);
@@ -97,20 +107,48 @@ public class QAIssueViewModule
         }
     }
 
-    private void SetupSearchInputField()
+    private void SetupSearchAndFilterInputs()
     {
-        if (issueSearchInputField == null)
-            return;
+        if (issueSearchInputField != null)
+        {
+            issueSearchInputField.onValueChanged.RemoveListener(OnSearchInputChanged);
+            issueSearchInputField.onValueChanged.AddListener(OnSearchInputChanged);
+        }
 
-        issueSearchInputField.onValueChanged.RemoveListener(FilterIssueButtons);
-        issueSearchInputField.onValueChanged.AddListener(FilterIssueButtons);
+        if (statusFilterDropdown != null)
+        {
+            statusFilterDropdown.onValueChanged.RemoveListener(OnStatusFilterChanged);
+            statusFilterDropdown.onValueChanged.AddListener(OnStatusFilterChanged);
+        }
+
+        if (severityFilterDropdown != null)
+        {
+            severityFilterDropdown.onValueChanged.RemoveListener(OnSeverityFilterChanged);
+            severityFilterDropdown.onValueChanged.AddListener(OnSeverityFilterChanged);
+        }
+    }
+    private void OnSearchInputChanged(string _)
+    {
+        ApplyCurrentIssueFilter();
     }
 
-    private void FilterIssueButtons(string keyword)
+    private void OnStatusFilterChanged(int _)
     {
-        string searchKeyword = keyword.Trim();
+        ApplyCurrentIssueFilter();
+    }
 
-        int newIssueButtonIndex = createdIssueButtons.Count - 1;
+    private void OnSeverityFilterChanged(int _)
+    {
+        ApplyCurrentIssueFilter();
+    }
+
+    private void ApplyCurrentIssueFilter()
+    {
+        string searchKeyword = GetSearchKeyword();
+        string statusFilter = GetDropdownValue(statusFilterDropdown, AllFilter);
+        string severityFilter = GetDropdownValue(severityFilterDropdown, AllFilter);
+
+        int issueCount = currentIssues != null ? currentIssues.Count : 0;
 
         for (int i = 0; i < createdIssueButtons.Count; i++)
         {
@@ -119,23 +157,25 @@ public class QAIssueViewModule
             if (button == null)
                 continue;
 
-            // + New Issue 버튼은 검색어와 상관없이 항상 표시
-            if (i == newIssueButtonIndex)
+            if (i >= issueCount)
             {
                 button.gameObject.SetActive(true);
                 continue;
             }
 
-            if (string.IsNullOrEmpty(searchKeyword))
+            QAIssueData issue = currentIssues[i];
+
+            if (issue == null)
             {
-                button.gameObject.SetActive(true);
+                button.gameObject.SetActive(false);
                 continue;
             }
 
-            TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>(true);
-            string title = buttonText != null ? buttonText.text : string.Empty;
+            bool isTitleMatched = IsTitleMatched(issue.title, searchKeyword);
+            bool isStatusMatched = IsFilterMatched(issue.status, statusFilter, DefaultStatus);
+            bool isSeverityMatched = IsFilterMatched(issue.severity, severityFilter, DefaultSeverity);
 
-            bool isMatched = title.IndexOf(searchKeyword, StringComparison.OrdinalIgnoreCase) >= 0;
+            bool isMatched = isTitleMatched && isStatusMatched && isSeverityMatched;
 
             button.gameObject.SetActive(isMatched);
         }
@@ -143,12 +183,35 @@ public class QAIssueViewModule
         RefreshIssueListLayout();
     }
 
-    private void ApplyCurrentSearchFilter()
+    private string GetSearchKeyword()
     {
         if (issueSearchInputField == null)
-            return;
+            return string.Empty;
 
-        FilterIssueButtons(issueSearchInputField.text);
+        return issueSearchInputField.text.Trim();
+    }
+
+    private bool IsTitleMatched(string title, string searchKeyword)
+    {
+        if (string.IsNullOrEmpty(searchKeyword))
+            return true;
+
+        string targetTitle = title ?? string.Empty;
+
+        return targetTitle.IndexOf(searchKeyword, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    private bool IsFilterMatched(string value, string filterValue, string defaultValue)
+    {
+        if (string.IsNullOrWhiteSpace(filterValue))
+            return true;
+
+        if (string.Equals(filterValue, AllFilter, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        string targetValue = string.IsNullOrWhiteSpace(value) ? defaultValue : value.Trim();
+
+        return string.Equals(targetValue, filterValue, StringComparison.OrdinalIgnoreCase);
     }
 
     private void RefreshIssueListLayout()
@@ -161,6 +224,8 @@ public class QAIssueViewModule
 
     public void InitializeIssueButtons(IReadOnlyList<QAIssueData> issues)
     {
+        currentIssues = issues;
+
         ClearCreatedButtons();
 
         if (issues == null)
@@ -172,7 +237,7 @@ public class QAIssueViewModule
         }
 
         CreateNewIssueButton();
-        ApplyCurrentSearchFilter();
+        ApplyCurrentIssueFilter();
     }
 
     public void OpenIssueListWindow()
@@ -277,6 +342,7 @@ public class QAIssueViewModule
     {
         SetDropdownValue(statusDropdown, value, DefaultStatus);
     }
+
     public void SetSeverityInput(string value)
     {
         SetDropdownValue(severityDropdown, value, DefaultSeverity);
@@ -297,7 +363,7 @@ public class QAIssueViewModule
         if (string.IsNullOrWhiteSpace(value))
             return defaultValue;
 
-        return value;
+        return value.Trim();
     }
 
     private void SetDropdownValue(TMP_Dropdown dropdown, string value, string defaultValue)
@@ -305,7 +371,7 @@ public class QAIssueViewModule
         if (dropdown == null || dropdown.options == null || dropdown.options.Count <= 0)
             return;
 
-        string targetValue = string.IsNullOrWhiteSpace(value) ? defaultValue : value;
+        string targetValue = string.IsNullOrWhiteSpace(value) ? defaultValue : value.Trim();
 
         for (int i = 0; i < dropdown.options.Count; i++)
         {
@@ -340,13 +406,13 @@ public class QAIssueViewModule
         {
             SetButtonAsIssue(createdIssueButtons[issueIndex], issueIndex, title);
             CreateNewIssueButton();
-            ApplyCurrentSearchFilter();
+            ApplyCurrentIssueFilter();
             return;
         }
 
         CreateIssueButton(issueIndex, title);
         CreateNewIssueButton();
-        ApplyCurrentSearchFilter();
+        ApplyCurrentIssueFilter();
     }
 
     public void UpdateIssueButtonTitle(int issueIndex, string title)
@@ -355,11 +421,12 @@ public class QAIssueViewModule
             return;
 
         SetButtonAsIssue(createdIssueButtons[issueIndex], issueIndex, title);
-        ApplyCurrentSearchFilter();
+        ApplyCurrentIssueFilter();
     }
 
     public void RemoveIssueButtonAndRebind(int removeIndex, IReadOnlyList<QAIssueData> issues)
     {
+
         if (removeIndex < 0 || removeIndex >= createdIssueButtons.Count)
             return;
 
@@ -371,7 +438,7 @@ public class QAIssueViewModule
         createdIssueButtons.RemoveAt(removeIndex);
 
         RebindIssueButtons(issues);
-        ApplyCurrentSearchFilter();
+        ApplyCurrentIssueFilter();
     }
 
     public void OpenDeleteConfirmWindow()
@@ -461,6 +528,8 @@ public class QAIssueViewModule
 
     private void RebindIssueButtons(IReadOnlyList<QAIssueData> issues)
     {
+        currentIssues = issues;
+
         if (issues == null)
             return;
 
@@ -494,7 +563,7 @@ public class QAIssueViewModule
                 SetButtonAsNewIssue(createdIssueButtons[i]);
         }
 
-        ApplyCurrentSearchFilter();
+        ApplyCurrentIssueFilter();
     }
 
     private void ClearCreatedButtons()

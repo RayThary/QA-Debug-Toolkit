@@ -12,7 +12,11 @@ public class QAIssueManager : MonoBehaviour
     [SerializeField] private GameObject issueListWindow;
     [SerializeField] private Transform issueListContent;
     [SerializeField] private Button issueButtonTemplate;
+
+    [Header("Issue Filter")]
     [SerializeField] private TMP_InputField issueSearchInputField;
+    [SerializeField] private TMP_Dropdown statusFilterDropdown;
+    [SerializeField] private TMP_Dropdown severityFilterDropdown;
 
     [Header("Issue Window")]
     [SerializeField] private GameObject issueWindow;
@@ -50,8 +54,11 @@ public class QAIssueManager : MonoBehaviour
         dataModule.Setup(defaultIssueTitles);
         storageModule.Setup(qaToolkit);
 
-        viewModule.Setup(issueListWindow, issueWindow, issueWindowTitleText, titleInput, descriptionInput, statusDropdown, severityDropdown, messageView,
-            issueListContent, issueButtonTemplate, issueSearchInputField, deleteConfirmWindow, confirmDeleteButton, cancelDeleteButton,
+        viewModule.Setup(issueListWindow, issueWindow, issueWindowTitleText,
+            titleInput, descriptionInput, statusDropdown, severityDropdown, messageView,
+            issueListContent, issueButtonTemplate, issueSearchInputField,
+            statusFilterDropdown, severityFilterDropdown,
+            deleteConfirmWindow, confirmDeleteButton, cancelDeleteButton,
             SelectIssue, StartNewIssue, ConfirmDeleteIssue, CancelDeleteIssue);
 
         QAIssueSaveData saveData = storageModule.LoadIssues();
