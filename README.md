@@ -64,17 +64,15 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 
 ## 최신 업데이트
 
-### v1.1 - Issue Management Update
+이전 버전 및 전체 업데이트 기록은 UpdateLog.md에서 관리합니다.
 
-* Issue Window에 Status 드롭다운 추가
-* Issue Window에 Severity 드롭다운 추가
-* Status 기본값을 Open으로 설정
-* Severity 기본값을 Medium으로 설정
-* QAIssueData에 Status / Severity 데이터 추가
-* 기존 이슈 수정 시 Status / Severity 값 복원
-* JSON 저장/로드에 Status / Severity 반영
-* TXT 리포트 Export에 Status / Severity 출력 추가
-* Sheet용 TXT Export에 Status / Severity 컬럼 추가
-* Dropdown 옵션 표시 문제 수정
+### v1.2 - Issue Filter Update
+
+* Issue List에 Status Filter Dropdown 추가
+* Issue List에 Severity Filter Dropdown 추가
+* 기존 Search와 Status / Severity 필터 동시 적용
+* All 선택 시 해당 필터 조건 무시
+* 필터 변경 시 Issue List 즉시 갱신
+* 이슈 수정/삭제 후 현재 필터 조건에 맞게 리스트 갱신
 
 이전 버전 및 전체 업데이트 기록은 `UpdateLog.md`에서 관리합니다.
