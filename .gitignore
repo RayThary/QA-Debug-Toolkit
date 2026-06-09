@@ -80,3 +80,9 @@ crashlytics-build.properties
 *.json~
 *.bak
 *.unity.backup
+
+# ─────────────────────────────
+# Local test assets
+# ─────────────────────────────
+Assets/Test/
+Assets/Test.meta
