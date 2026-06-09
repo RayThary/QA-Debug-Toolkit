@@ -88,8 +88,6 @@ public class QAIssueStorageModule
             builder.AppendLine(issue.description);
 
             File.WriteAllText(reportPath, builder.ToString(), Encoding.UTF8);
-
-            Debug.Log("QA Issue Report Exported : " + reportPath);
         }
     }
 

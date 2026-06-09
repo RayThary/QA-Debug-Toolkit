@@ -126,6 +126,15 @@ public class QAToolkit : MonoBehaviour
         toolkitCanvasScaler.matchWidthOrHeight = matchWidthOrHeight;
     }
 
+
+    private bool IsKoreanFont(TMP_FontAsset fontAsset)
+    {
+        if (fontAsset == null)
+            return false;
+
+        return fontAsset.HasCharacters("°¡³ª´Ù¶ó¸¶¹Ù»ç¾ÆÀÚÂ÷Ä«Å¸ÆÄÇÏÆR¤¡¤¤¤§¤¿¤Á¤Ã¤Å");
+    }
+
     private void ApplyTMPFont()
     {
         if (basicFont == null)
@@ -135,11 +144,17 @@ public class QAToolkit : MonoBehaviour
         if (basicFont == null)
             return;
 
-        TextMeshProUGUI[] tmpTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
+        bool canUseKoreanText = IsKoreanFont(basicFont);
 
-        for (int i = 0; i < tmpTexts.Length; i++)
+        TextMeshProUGUI[] tempTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
+
+        for (int i = 0; i < tempTexts.Length; i++)
         {
-            tmpTexts[i].font = basicFont;
+            tempTexts[i].font = basicFont;
+            if (canUseKoreanText && tempTexts[i].TryGetComponent(out QALocalizedText localizedText))
+            {
+                tempTexts[i].text = localizedText.GetLocalizedText;
+            }
         }
     }
 
@@ -233,7 +248,7 @@ public class QAToolkit : MonoBehaviour
         return path;
     }
 
-    
+
     public string GetScreenshotFolderPath()
     {
         string path = Path.Combine(GetQAReportFolderPath(), "Screenshots");
