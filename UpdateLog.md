@@ -5,6 +5,68 @@ README에는 최신 업데이트 요약만 남기고, 이전 버전의 변경 �
 
 ---
 
+## v1.3 - Checklist Update
+
+QA 테스트 중 확인해야 할 항목을 런타임에서 직접 작성하고 관리할 수 있도록 Checklist 기능을 추가한 업데이트입니다.
+기존 Issue 기능이 발견된 문제를 기록하는 버그 리포트 역할이었다면, Checklist는 테스트 전에 확인할 항목을 정리하고 Pass / Fail 상태를 관리하는 용도로 구성했습니다.
+
+### 추가된 내용
+
+* F1 Overlay에 Checklist 버튼 추가
+* ChecklistWindow UI 추가
+* ChecklistItemWindow UI 추가
+* 체크 항목 추가 / 수정 / 삭제 기능 추가
+* 체크 항목 상태 관리 기능 추가
+
+  * Not Tested
+  * Pass
+  * Fail
+* 체크리스트 검색 기능 추가
+* 체크리스트 상태 필터 기능 추가
+* 체크리스트 JSON 저장 / 로드 기능 추가
+* 사람이 읽기 좋은 TXT 리포트 Export 기능 추가
+* Google Sheets에 붙여넣기 쉬운 TSV Export 기능 추가
+* QAReports/Checklist 경로에 체크리스트 결과 저장
+
+### 구현 구조
+
+* QAChecklistManager 추가
+* QAChecklistDataModule 추가
+* QAChecklistViewModule 추가
+* QAChecklistStorageModule 추가
+* QAToolkit에 Checklist 저장 경로 생성 기능 추가
+
+### 업데이트 목적
+
+QA Debug Toolkit이 단순히 발생한 이슈를 기록하는 도구에서 끝나지 않고,
+테스트 전에 확인해야 할 항목을 정리하고 실행 결과를 관리할 수 있는 QA 보조 툴로 확장되도록 개선했습니다.
+
+이를 통해 테스트 항목을 먼저 Checklist로 관리하고, 문제가 발생한 항목은 Issue로 따로 기록하는 흐름을 구성할 수 있습니다.
+
+---
+
+## v1.2.1 - Korean UI Text Update
+
+한글 UI 문구 적용을 위한 기본 구조를 추가한 패치 업데이트입니다.
+TMP Font Asset이 한글을 지원하는 경우, 지정된 UI 문구를 한글로 적용할 수 있도록 처리했습니다.
+
+### 추가된 내용
+
+* TMP Font Asset의 한글 지원 여부 확인 처리 추가
+* 한글 지원 폰트 사용 시 QALocalizedText 문구 적용 처리 추가
+* 주요 UI 버튼 및 고정 문구 한글화 대응 구조 추가
+* QALocalizedText 컴포넌트 추가
+* 테스트용 한글 폰트 파일 및 생성 결과물 Git 제외 처리 추가
+* QAReports 결과물 폴더 Git 제외 처리 추가
+* .gitignore에 Assets/Test 및 Assets/QAReports 경로 추가
+
+### 업데이트 목적
+
+QA Debug Toolkit의 UI 문구를 한글로 표시할 수 있도록 기본 구조를 추가했습니다.
+폰트가 한글을 지원하지 않을 경우 한글 문구 적용을 막아, 텍스트 깨짐을 방지할 수 있도록 했습니다.
+
+---
+
 ## v1.2 - Issue Filter Update
 
 v1.1에서 추가한 Status / Severity 데이터를 Issue List에서 직접 활용할 수 있도록 필터 기능을 추가한 업데이트입니다.
@@ -94,10 +156,10 @@ Unity 런타임 환경에서 QA 테스트 중 필요한 정보 확인, 스크린
 
 ## 다음 업데이트 후보
 
-### v1.3 후보
+### v1.4 후보
 
-* UI 고정 문구 한글화
-* TMP 한글 폰트 적용 확인
 * Screenshot과 Issue 연결 기능
 * Log Capture 기능
-* Checklist 기능
+* Checklist 항목을 Issue로 변환하는 기능
+* Checklist 기본 템플릿 기능
+* Export 파일명 및 폴더 구조 정리
