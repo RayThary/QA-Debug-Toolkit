@@ -1,0 +1,7 @@
+﻿Checklist Item 1
+Title : 체크아이템 테스트
+Status : Pass
+Scene : QAToolkitDemo
+
+Note
+체크리스트의 백그라운드가 전부다 잘꺼졌는지체크

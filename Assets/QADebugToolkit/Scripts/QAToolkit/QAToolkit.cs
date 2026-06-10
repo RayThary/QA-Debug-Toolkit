@@ -268,4 +268,14 @@ public class QAToolkit : MonoBehaviour
 
         return path;
     }
+
+    public string GetChecklistFolderPath()
+    {
+        string path = Path.Combine(GetProjectRootPath(), saveFolderName, "Checklist");
+
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+
+        return path;
+    }
 }

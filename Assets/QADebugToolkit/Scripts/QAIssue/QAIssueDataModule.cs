@@ -29,9 +29,9 @@ public class QAIssueDataModule
     public const string DefaultSeverity = "Medium";
 
     private readonly List<QAIssueData> issueList = new List<QAIssueData>();
-    private List<string> defaultIssueTitles = new List<string>();
-
     public IReadOnlyList<QAIssueData> Issues => issueList;
+
+    private List<string> defaultIssueTitles = new List<string>();
 
     public void Setup(List<string> defaultTitles)
     {

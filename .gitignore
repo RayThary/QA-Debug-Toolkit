@@ -86,3 +86,9 @@ crashlytics-build.properties
 # ─────────────────────────────
 Assets/Test/
 Assets/Test.meta
+
+# ─────────────────────────────
+# QA Toolkit generated reports
+# ─────────────────────────────
+Assets/QAReports/
+Assets/QAReports.meta
