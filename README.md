@@ -64,15 +64,21 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 
 ## 최신 업데이트
 
-이전 버전 및 전체 업데이트 기록은 UpdateLog.md에서 관리합니다.
+### v1.3 - Checklist Update
 
-### v1.2 - Issue Filter Update
+* QA 테스트 항목을 관리할 수 있는 Checklist 기능 추가
+* F1 Overlay에 Checklist 버튼 추가
+* ChecklistWindow 및 ChecklistItemWindow UI 추가
+* 체크 항목 추가 / 수정 / 삭제 기능 추가
+* 체크 항목 상태 관리 추가
 
-* Issue List에 Status Filter Dropdown 추가
-* Issue List에 Severity Filter Dropdown 추가
-* 기존 Search와 Status / Severity 필터 동시 적용
-* All 선택 시 해당 필터 조건 무시
-* 필터 변경 시 Issue List 즉시 갱신
-* 이슈 수정/삭제 후 현재 필터 조건에 맞게 리스트 갱신
+  * Not Tested
+  * Pass
+  * Fail
+* 체크리스트 검색 및 상태 필터 기능 추가
+* 체크리스트 JSON 저장 / 로드 기능 추가
+* TXT / TSV Export 기능 추가
+* QAReports/Checklist 경로에 체크리스트 결과 저장
 
 이전 버전 및 전체 업데이트 기록은 `UpdateLog.md`에서 관리합니다.
+
