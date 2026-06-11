@@ -8,27 +8,31 @@
 
 TMP Font가 정상 표시되지 않는 경우 Unity의 TextMeshPro Essentials를 Import해야 합니다.
 
+한글 UI 문구를 사용하려면 한글을 지원하는 TMP Font Asset이 필요합니다.
+폰트가 한글을 지원하지 않는 경우 기본 영문 UI로 표시됩니다.
+
 ## How to Use
 
 1. `Assets/QADebugToolkit/Prefabs` 폴더에서 `QAToolkit` Prefab을 원하는 Scene에 배치합니다.
 2. Play 모드에서 `F1` 키를 눌러 QA Overlay를 열고 닫습니다.
 3. Screenshot 버튼을 눌러 현재 Game View를 저장할 수 있습니다.
 4. Issue 버튼을 눌러 이슈 목록을 열고, 새 이슈 생성/수정/삭제를 진행할 수 있습니다.
-5. Save 버튼으로 Issue 데이터를 JSON 파일로 저장합니다.
-6. Export 버튼으로 TXT 리포트와 Sheet용 TXT 파일을 함께 생성합니다.
+5. Checklist 버튼을 눌러 테스트 항목 목록을 열고, 체크 항목 생성/수정/삭제 및 상태 관리를 진행할 수 있습니다.
+6. Save 버튼으로 Issue 또는 Checklist 데이터를 JSON 파일로 저장합니다.
+7. Export 버튼으로 TXT 리포트와 Sheet용 TXT/TSV 파일을 함께 생성합니다.
 
 데모 확인이 필요한 경우 `QAToolkitDemo` Scene을 실행하여 기본 구성 상태를 확인할 수 있습니다.
 
 ## Inspector Settings
 
-QAToolkit Prefab은 QA Overlay, Runtime Info, Screenshot, Issue UI 참조가 기본 연결된 상태로 구성되어 있습니다.
+QAToolkit Prefab은 QA Overlay, Runtime Info, Screenshot, Issue UI, Checklist UI 참조가 기본 연결된 상태로 구성되어 있습니다.
 일반 사용 시에는 Canvas Settings, Save Settings, Toolkit Settings 정도만 확인하면 됩니다.
 
 * **Canvas Settings**
   QA Overlay의 정렬 순서, 기준 해상도, 화면 비율 대응 방식을 설정합니다.
 
 * **Save Settings**
-  QA Toolkit에서 생성되는 JSON, TXT, Screenshot 파일의 저장 위치를 설정합니다.
+  QA Toolkit에서 생성되는 JSON, TXT, TSV, Screenshot 파일의 저장 위치를 설정합니다.
   Project Folder, App Data, Custom Path 중 선택할 수 있습니다.
 
 * **Toolkit Settings**
@@ -38,6 +42,10 @@ QAToolkit Prefab은 QA Overlay, Runtime Info, Screenshot, Issue UI 참조가 기
   Issue Manager에서 기본 이슈 제목을 Inspector로 미리 등록할 수 있는 선택 기능입니다.
   비워두면 기본 이슈는 생성되지 않습니다.
 
+* **Default Checklists**
+  Checklist Manager에서 기본 체크 항목 제목을 Inspector로 미리 등록할 수 있는 선택 기능입니다.
+  비워두면 기본 체크 항목은 생성되지 않습니다.
+
 ## Issue Management
 
 Issue 기능은 Play 중 발견한 문제를 QA Overlay 안에서 바로 기록하고 관리하기 위한 기능입니다.
@@ -45,23 +53,51 @@ Issue 기능은 Play 중 발견한 문제를 QA Overlay 안에서 바로 기록�
 * 새 이슈 생성 / 수정 / 삭제
 * 삭제 확인창
 * 제목 중복 방지
-* 제목 기준 Search / Filter
+* 제목 기준 Search
+* Status / Severity Filter
 * 멀티라인 Description 입력
 * JSON 저장 및 로드
 * 이슈별 TXT 리포트 Export
-* Google Sheets 붙여넣기용 Sheet TXT Export
+* Google Sheets 붙여넣기용 Sheet TXT/TSV Export
 
-Issue 데이터에는 Title, Description, Created Time, Updated Time, Scene, Scene Time 정보가 저장됩니다.
+Issue 데이터에는 Title, Description, Status, Severity, Created Time, Updated Time, Scene, Scene Time 정보가 저장됩니다.
+
+## Checklist Management
+
+Checklist 기능은 테스트 전에 확인해야 할 항목을 정리하고, Play 중 Pass / Fail 상태를 관리하기 위한 기능입니다.
+
+* 새 체크 항목 생성 / 수정 / 삭제
+* 삭제 확인창
+* 제목 중복 방지
+* 제목 기준 Search
+* Status Filter
+* Note 입력
+* Not Tested / Pass / Fail 상태 관리
+* JSON 저장 및 로드
+* 체크리스트 TXT 리포트 Export
+* Google Sheets 붙여넣기용 Sheet TXT/TSV Export
+
+Checklist 데이터에는 Title, Note, Status, Created Time, Updated Time, Scene, Scene Time 정보가 저장됩니다.
+
+## Screenshot
+
+Screenshot 기능은 Play 중 현재 Game View 화면을 이미지 파일로 저장하기 위한 기능입니다.
+
+* QA Overlay에서 Screenshot 버튼으로 저장
+* 저장 시점 기준 파일명 자동 생성
+* Save Settings에서 지정한 경로 기준으로 저장
 
 ## Export Output
 
-Export 버튼을 누르면 두 가지 파일이 함께 생성됩니다.
+Issue 또는 Checklist 창에서 Export 버튼을 누르면 리포트 파일이 생성됩니다.
 
-* 이슈별 TXT 리포트
-  * 사람이 읽기 쉬운 상세 리포트 형식입니다.
+* **TXT 리포트**
+  사람이 읽기 쉬운 상세 리포트 형식입니다.
 
-* Sheet용 TXT 파일
-  * 전체 이슈 목록을 Tab 구분 형식으로 출력합니다.
-  * Google Sheets에 복사/붙여넣기하여 표 형태로 정리할 수 있습니다.
+* **Sheet용 TXT/TSV 파일**
+  전체 목록을 Tab 구분 형식으로 출력합니다.
+  Google Sheets에 복사/붙여넣기하여 표 형태로 정리할 수 있습니다.
 
 저장 파일은 Save Settings에서 지정한 경로 기준으로 생성됩니다.
+
+기본 저장 경로는 QAReports 폴더이며, 기능별로 Issue / Checklist / Screenshot 결과물이 구분되어 저장됩니다.
