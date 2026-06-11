@@ -1,2 +1,0 @@
-﻿No	Checklist Id	Title	Status	Created Time	Updated Time	Scene	Scene Time	Note
-1	CHECK_20260610_201629887	체크아이템 테스트	Pass	QAToolkitDemo	체크리스트의 백그라운드가 전부다 잘꺼졌는지체크
