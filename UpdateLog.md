@@ -5,6 +5,25 @@ README에는 최신 업데이트 요약만 남기고, 이전 버전의 변경 �
 
 ---
 
+## v1.3.1 - Export & Toggle Cleanup
+
+### 변경 내용
+
+* Checklist TSV Export 파일 확장자를 `.tsv`로 정리
+* Checklist TSV Export 헤더와 실제 출력 데이터 컬럼 불일치 수정
+
+  * 기존 헤더에 남아 있던 미사용 컬럼 제거
+  * 실제 출력 데이터 기준으로 `No / Checklist Id / Title / Status / Scene / Note` 구조로 정리
+* QA 창이 열려 있을 때 F1 Overlay 토글이 동작하지 않도록 처리
+* InputField / TMP_InputField 입력 중 F1 Overlay 토글 방지 처리
+
+### 수정 목적
+
+* Checklist Export 결과를 Google Sheets에 붙여넣을 때 컬럼 구조가 어긋나지 않도록 정리
+* Issue / Checklist 작성 중 F1 입력으로 Overlay가 의도치 않게 열리거나 닫히는 문제 방지
+* QA 기록 작성 중 입력 흐름이 끊기지 않도록 사용성 개선
+
+
 ## v1.3 - Checklist Update
 
 QA 테스트 중 확인해야 할 항목을 런타임에서 직접 작성하고 관리할 수 있도록 Checklist 기능을 추가한 업데이트입니다.

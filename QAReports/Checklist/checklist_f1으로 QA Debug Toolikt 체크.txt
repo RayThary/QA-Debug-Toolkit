@@ -1,0 +1,7 @@
+﻿Checklist Item 1
+Title : f1으로 QA Debug Toolikt 체크
+Status : Fail
+Scene : QAToolkitDemo
+
+Note
+문제없이열리지만 다른창이켜져있을때 f1으로안꺼지던지 아니면 다른조건을추가해줄필요가있어보임

@@ -77,8 +77,8 @@ public class QAChecklistStorageModule
 
             builder.AppendLine("Checklist Item " + (i + 1));
             builder.AppendLine("Title : " + checklist.title);
-            builder.AppendLine("Status : " + checklist.status);            
-            builder.AppendLine("Scene : " + checklist.sceneName);            
+            builder.AppendLine("Status : " + checklist.status);
+            builder.AppendLine("Scene : " + checklist.sceneName);
             builder.AppendLine();
             builder.AppendLine("Note");
             builder.AppendLine(checklist.note);
@@ -99,11 +99,11 @@ public class QAChecklistStorageModule
         if (string.IsNullOrWhiteSpace(checklistFolderPath))
             return;
 
-        string sheetPath = Path.Combine(checklistFolderPath, "checklist_00_sheet_export.txt");
+        string sheetPath = Path.Combine(checklistFolderPath, "checklist_sheet_export.tsv");
 
         StringBuilder builder = new StringBuilder();
 
-        builder.AppendLine("No\tChecklist Id\tTitle\tStatus\tCreated Time\tUpdated Time\tScene\tScene Time\tNote");
+        builder.AppendLine("No\tChecklist Id\tTitle\tStatus\tScene\tNote");
 
         for (int i = 0; i < checklists.Count; i++)
         {

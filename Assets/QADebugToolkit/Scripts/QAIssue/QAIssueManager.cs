@@ -92,6 +92,7 @@ public class QAIssueManager : MonoBehaviour
 
     public void OpenIssueListWindow()
     {
+        qaToolkit.SetToggleBlocked(true);
         viewModule.OpenIssueListWindow();
     }
 
@@ -100,6 +101,7 @@ public class QAIssueManager : MonoBehaviour
         if (!SaveCurrentIssue(true))
             return;
 
+        qaToolkit.SetToggleBlocked(true);
         SaveAllIssuesToJson();
 
         viewModule.CloseIssueListWindow();

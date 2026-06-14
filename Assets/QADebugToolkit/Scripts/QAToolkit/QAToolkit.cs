@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -43,7 +44,9 @@ public class QAToolkit : MonoBehaviour
     [SerializeField] private bool applyCanvasSettingsOnAwake = true;
     [SerializeField] private bool applyFontOnAwake = true;
 
+
     private bool isOpen;
+    private bool isToggleBlocked;
     private float fpsTimer;
     private int frameCount;
     private float currentFps;
@@ -87,13 +90,50 @@ public class QAToolkit : MonoBehaviour
         if (Keyboard.current == null)
             return;
 
-        if (Keyboard.current.f1Key.wasPressedThisFrame)
-            ToggleToolkit();
+        if (!Keyboard.current.f1Key.wasPressedThisFrame)
+            return;
+
+        if (ShouldBlockToggleInput())
+            return;
+
+        ToggleToolkit();
     }
 
     private void ToggleToolkit()
     {
         SetToolkitActive(!isOpen);
+    }
+
+    public void SetToggleBlocked(bool value)
+    {
+        isToggleBlocked = value;
+    }
+
+    private bool ShouldBlockToggleInput()
+    {
+        if (isToggleBlocked)
+            return true;
+
+        return IsInputFieldFocused();
+    }
+
+    private bool IsInputFieldFocused()
+    {
+        if (EventSystem.current == null)
+            return false;
+
+        GameObject selectedObject = EventSystem.current.currentSelectedGameObject;
+
+        if (selectedObject == null)
+            return false;
+
+        if (selectedObject.GetComponent<TMP_InputField>() != null)
+            return true;
+
+        if (selectedObject.GetComponent<InputField>() != null)
+            return true;
+
+        return false;
     }
 
     private void SetToolkitActive(bool value)
@@ -126,15 +166,6 @@ public class QAToolkit : MonoBehaviour
         toolkitCanvasScaler.matchWidthOrHeight = matchWidthOrHeight;
     }
 
-
-    private bool IsKoreanFont(TMP_FontAsset fontAsset)
-    {
-        if (fontAsset == null)
-            return false;
-
-        return fontAsset.HasCharacters("°¡³ª´Ù¶ó¸¶¹Ù»ç¾ÆÀÚÂ÷Ä«Å¸ÆÄÇÏÆR¤¡¤¤¤§¤¿¤Á¤Ã¤Å");
-    }
-
     private void ApplyTMPFont()
     {
         if (basicFont == null)
@@ -144,17 +175,11 @@ public class QAToolkit : MonoBehaviour
         if (basicFont == null)
             return;
 
-        bool canUseKoreanText = IsKoreanFont(basicFont);
+        TextMeshProUGUI[] tmpTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
 
-        TextMeshProUGUI[] tempTexts = GetComponentsInChildren<TextMeshProUGUI>(true);
-
-        for (int i = 0; i < tempTexts.Length; i++)
+        for (int i = 0; i < tmpTexts.Length; i++)
         {
-            tempTexts[i].font = basicFont;
-            if (canUseKoreanText && tempTexts[i].TryGetComponent(out QALocalizedText localizedText))
-            {
-                tempTexts[i].text = localizedText.GetLocalizedText;
-            }
+            tmpTexts[i].font = basicFont;
         }
     }
 
@@ -201,6 +226,7 @@ public class QAToolkit : MonoBehaviour
     {
         GetScreenshotFolderPath();
         GetIssueFolderPath();
+        GetChecklistFolderPath();
     }
 
     private string GetProjectRootPath()
@@ -271,11 +297,12 @@ public class QAToolkit : MonoBehaviour
 
     public string GetChecklistFolderPath()
     {
-        string path = Path.Combine(GetProjectRootPath(), saveFolderName, "Checklist");
+        string path = Path.Combine(GetQAReportFolderPath(), "Checklist");
 
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
 
         return path;
     }
+
 }

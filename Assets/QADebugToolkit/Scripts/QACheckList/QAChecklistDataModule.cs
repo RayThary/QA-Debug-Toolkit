@@ -40,7 +40,7 @@ public class QAChecklistDataModule
         List<QAChecklistData> savedChecklists = new List<QAChecklistData>();
 
         if (saveData != null && saveData.checklists != null)
-            savedChecklists.AddRange(saveData.checklists);        
+            savedChecklists.AddRange(saveData.checklists);
 
         for (int i = 0; i < defaultChecklistTitles.Count; i++)
         {
@@ -142,8 +142,6 @@ public class QAChecklistDataModule
 
     private QAChecklistData CreateChecklistData(string title, string note, string status)
     {
-        string nowTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
         QAChecklistData checklist = new QAChecklistData();
 
         checklist.checklistId = "CHECK_" + DateTime.Now.ToString("yyyyMMdd_HHmmssfff");

@@ -84,6 +84,7 @@ public class QAChecklistManager : MonoBehaviour
 
     public void OpenChecklistWindow()
     {
+        qaToolkit.SetToggleBlocked(true);
         viewModule.OpenChecklistWindow();
     }
 
@@ -92,8 +93,9 @@ public class QAChecklistManager : MonoBehaviour
         if (!SaveCurrentChecklistItem(true))
             return;
 
-        SaveAllChecklistsToJson();
+        qaToolkit.SetToggleBlocked(false);
 
+        SaveAllChecklistsToJson();
         viewModule.CloseChecklistWindow();
     }
 
