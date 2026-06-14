@@ -122,6 +122,13 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 
 ## 최신 업데이트
 
+### v1.3.1 - Export & Toggle Cleanup
+
+* Checklist TSV Export 파일 확장자 정리
+* Checklist TSV Export 헤더와 실제 출력 데이터 컬럼 불일치 수정
+* QA 창이 열려 있을 때 F1 Overlay 토글이 동작하지 않도록 처리
+* InputField / TMP_InputField 입력 중 F1 Overlay 토글 방지 처리
+
 ### v1.3 - Checklist Update
 
 * QA 테스트 항목을 관리할 수 있는 Checklist 기능 추가
@@ -138,5 +145,7 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 * 체크리스트 TXT / TSV Export 기능 추가
 * 한글 UI 문구 적용 지원
 * QAReports/Checklist 경로에 체크리스트 결과 저장
+
+
 
 이전 버전 및 전체 업데이트 기록은 `UpdateLog.md`에서 관리합니다.
