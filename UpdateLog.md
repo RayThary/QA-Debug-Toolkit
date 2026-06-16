@@ -5,6 +5,29 @@ README에는 최신 업데이트 요약만 남기고, 이전 버전의 변경 �
 
 ---
 
+## v1.4 - Issue Screenshot Attach
+
+Issue에 스크린샷을 직접 연결할 수 있도록 Screenshot Attach 기능을 추가한 업데이트입니다.
+기존 Issue 기록이 텍스트 중심이었다면, v1.4에서는 저장된 스크린샷을 Gallery에서 선택해 Issue와 연결하고,
+이후 저장 / 로드 / Export 흐름에서도 스크린샷 경로를 함께 관리할 수 있도록 확장했습니다.
+
+### 추가된 내용
+
+* IssueWindow에 스크린샷 미리보기 영역 추가
+* 미리보기 영역 클릭 시 Screenshot Gallery 창 열림
+* Screenshot Gallery에서 저장된 PNG 스크린샷 목록 표시
+* Grid Layout 기반으로 스크린샷 썸네일 표시
+* 스크린샷 선택 시 현재 Issue에 `screenshotPath` 연결
+* 선택된 스크린샷 파일명 표시 기능 추가
+* Clear 버튼으로 현재 Issue와 연결된 스크린샷 해제 기능 추가
+* Clear 시 실제 PNG 파일은 삭제하지 않고 Issue 연결만 해제
+* Issue Save / Load 시 `screenshotPath` 유지
+* Issue TXT Export에 Screenshot Path 출력 추가
+* Issue TSV Export에 Screenshot Path 컬럼 추가
+
+
+---
+
 ## v1.3.1 - Export & Toggle Cleanup
 
 ### 변경 내용
@@ -173,12 +196,10 @@ Unity 런타임 환경에서 QA 테스트 중 필요한 정보 확인, 스크린
 
 ---
 
-## 다음 업데이트 후보
+### v1.4.1 후보
 
-### v1.4 후보
-
-* Screenshot과 Issue 연결 기능
-* Log Capture 기능
-* Checklist 항목을 Issue로 변환하는 기능
-* Checklist 기본 템플릿 기능
-* Export 파일명 및 폴더 구조 정리
+* Screenshot Gallery 기능을 기본 기능으로 분리
+* Issue Screenshot Attach 외에도 재사용 가능한 Gallery 구조 정리
+* Gallery UI 템플릿 및 기본 설정 정리
+* Screenshot Gallery 경로 조회 / 썸네일 생성 로직 안정화
+* Issue Screenshot Attach 관련 코드 정리 및 Inspector 연결 구조 보완
