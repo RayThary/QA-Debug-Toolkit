@@ -29,6 +29,9 @@ public class QAIssueManager : MonoBehaviour
     [SerializeField] private TMP_Dropdown severityDropdown;
     [SerializeField] private QAToolkitMessageView messageView;
 
+    [Header("Screenshot Gallery")]
+    [SerializeField] private QAScreenshotGallery screenshotGallery;
+
     [Header("Delete Confirm")]
     [SerializeField] private GameObject deleteConfirmWindow;
     [SerializeField] private Button confirmDeleteButton;
@@ -101,7 +104,7 @@ public class QAIssueManager : MonoBehaviour
         if (!SaveCurrentIssue(true))
             return;
 
-        qaToolkit.SetToggleBlocked(true);
+        qaToolkit.SetToggleBlocked(false);
         SaveAllIssuesToJson();
 
         viewModule.CloseIssueListWindow();
@@ -116,6 +119,7 @@ public class QAIssueManager : MonoBehaviour
         isNewIssueMode = true;
 
         viewModule.ShowNewIssueWindow();
+        SetGalleryScreenshotPath(string.Empty);
     }
 
     private void SelectIssue(int index)
@@ -132,6 +136,7 @@ public class QAIssueManager : MonoBehaviour
         QAIssueData issue = dataModule.GetIssue(index);
 
         viewModule.ShowEditIssueWindow(issue);
+        SetGalleryScreenshotPath(issue.screenshotPath);
     }
 
     public void CloseIssueWindow()
@@ -147,6 +152,7 @@ public class QAIssueManager : MonoBehaviour
     public void ClearIssueInput()
     {
         viewModule.ClearInput();
+        SetGalleryScreenshotPath(string.Empty);
     }
 
     public void SaveData()
@@ -188,12 +194,19 @@ public class QAIssueManager : MonoBehaviour
         isNewIssueMode = false;
 
         viewModule.ClearInput();
+        SetGalleryScreenshotPath(string.Empty);
         viewModule.SetWindowTitleToNewIssue();
         viewModule.CloseDeleteConfirmWindow();
         viewModule.CloseIssueWindow();
         viewModule.ShowMessage("Issue Deleted.");
 
         SaveAllIssuesToJson();
+    }
+
+    private void SetGalleryScreenshotPath(string screenshotPath)
+    {
+        if (screenshotGallery != null)
+            screenshotGallery.SetSelectedScreenshotPath(screenshotPath);
     }
 
     public void ExportIssueReportToTxt()
@@ -215,6 +228,7 @@ public class QAIssueManager : MonoBehaviour
         string description = viewModule.GetDescriptionInput();
         string status = viewModule.GetStatusInput();
         string severity = viewModule.GetSeverityInput();
+        string screenshotPath = screenshotGallery != null ? screenshotGallery.GetSelectedScreenshotPath() : string.Empty;
 
         if (string.IsNullOrWhiteSpace(title) && string.IsNullOrWhiteSpace(description))
             return true;
@@ -234,7 +248,7 @@ public class QAIssueManager : MonoBehaviour
 
         if (isNewIssueMode || !dataModule.IsValidIndex(selectedIssueIndex))
         {
-            int newIssueIndex = dataModule.AddIssue(title, description, status, severity);
+            int newIssueIndex = dataModule.AddIssue(title, description, status, severity, screenshotPath);
 
             selectedIssueIndex = newIssueIndex;
             isNewIssueMode = false;
@@ -245,7 +259,7 @@ public class QAIssueManager : MonoBehaviour
         }
         else
         {
-            dataModule.UpdateIssue(selectedIssueIndex, title, description, status, severity);
+            dataModule.UpdateIssue(selectedIssueIndex, title, description, status, severity, screenshotPath);
 
             QAIssueData issue = dataModule.GetIssue(selectedIssueIndex);
 

@@ -122,29 +122,19 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 
 ## 최신 업데이트
 
-### v1.3.1 - Export & Toggle Cleanup
+### v1.4 - Issue Screenshot Attach
 
-* Checklist TSV Export 파일 확장자 정리
-* Checklist TSV Export 헤더와 실제 출력 데이터 컬럼 불일치 수정
-* QA 창이 열려 있을 때 F1 Overlay 토글이 동작하지 않도록 처리
-* InputField / TMP_InputField 입력 중 F1 Overlay 토글 방지 처리
-
-### v1.3 - Checklist Update
-
-* QA 테스트 항목을 관리할 수 있는 Checklist 기능 추가
-* F1 Overlay에 Checklist 버튼 추가
-* ChecklistWindow 및 ChecklistItemWindow UI 추가
-* 체크 항목 추가 / 수정 / 삭제 기능 추가
-* 체크 항목 상태 관리 추가
-
-  * Not Tested
-  * Pass
-  * Fail
-* 체크리스트 검색 및 상태 필터 기능 추가
-* 체크리스트 JSON 저장 / 로드 기능 추가
-* 체크리스트 TXT / TSV Export 기능 추가
-* 한글 UI 문구 적용 지원
-* QAReports/Checklist 경로에 체크리스트 결과 저장
+* Issue에 스크린샷 첨부 기능 추가
+* IssueWindow에 스크린샷 미리보기 영역 추가
+* 스크린샷 미리보기 클릭 시 Screenshot Gallery 창 열림
+* 저장된 PNG 스크린샷을 Gallery에서 Grid 형태로 표시
+* Gallery에서 스크린샷 선택 시 현재 Issue에 연결
+* 선택된 스크린샷 파일명 표시 기능 추가
+* Clear 버튼으로 Issue와 연결된 스크린샷 해제 기능 추가
+* Clear 시 실제 PNG 파일은 삭제하지 않고 Issue 연결만 해제
+* Issue Save / Load 시 `screenshotPath` 유지
+* Issue TXT / TSV Export에 Screenshot Path 출력 추가
+* Screenshot Gallery에서 현재 저장 폴더와 Unity 기본 저장 폴더의 PNG 조회 지원
 
 
 

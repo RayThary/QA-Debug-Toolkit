@@ -77,7 +77,6 @@ public class QAIssueViewModule
         onStartNewIssue = startNewIssueCallback;
         onConfirmDeleteIssue = confirmDeleteCallback;
         onCancelDeleteIssue = cancelDeleteCallback;
-
         SetupDeleteConfirmButtons();
         SetupSearchAndFilterInputs();
 

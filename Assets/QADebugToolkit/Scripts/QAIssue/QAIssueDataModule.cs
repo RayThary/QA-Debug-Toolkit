@@ -15,6 +15,7 @@ public class QAIssueData
     public string updatedTime;
     public string sceneName;
     public string sceneTime;
+    public string screenshotPath;
 }
 
 [Serializable]
@@ -64,7 +65,7 @@ public class QAIssueDataModule
             }
             else
             {
-                QAIssueData defaultIssue = CreateIssueData(defaultTitle, string.Empty, DefaultStatus, DefaultSeverity);
+                QAIssueData defaultIssue = CreateIssueData(defaultTitle, string.Empty, DefaultStatus, DefaultSeverity, string.Empty);
                 issueList.Add(defaultIssue);
             }
         }
@@ -89,15 +90,15 @@ public class QAIssueDataModule
         return issueList[index];
     }
 
-    public int AddIssue(string title, string description, string status, string severity)
+    public int AddIssue(string title, string description, string status, string severity, string screenshotPath)
     {
-        QAIssueData newIssue = CreateIssueData(title, description, status, severity);
+        QAIssueData newIssue = CreateIssueData(title, description, status, severity, screenshotPath);
         issueList.Add(newIssue);
 
         return issueList.Count - 1;
     }
 
-    public void UpdateIssue(int index, string title, string description, string status, string severity)
+    public void UpdateIssue(int index, string title, string description, string status, string severity, string screenshotPath)
     {
         if (!IsValidIndex(index))
             return;
@@ -108,6 +109,7 @@ public class QAIssueDataModule
         issue.description = description;
         issue.status = GetValidValue(status, DefaultStatus);
         issue.severity = GetValidValue(severity, DefaultSeverity);
+        issue.screenshotPath = GetValidValue(screenshotPath, string.Empty);
         issue.updatedTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         issue.sceneName = SceneManager.GetActiveScene().name;
         issue.sceneTime = FormatTime(Time.timeSinceLevelLoad);
@@ -148,7 +150,7 @@ public class QAIssueDataModule
         return false;
     }
 
-    private QAIssueData CreateIssueData(string title, string description, string status, string severity)
+    private QAIssueData CreateIssueData(string title, string description, string status, string severity, string screenshotPath)
     {
         string nowTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -159,6 +161,7 @@ public class QAIssueDataModule
         issue.description = description ?? string.Empty;
         issue.status = GetValidValue(status, DefaultStatus);
         issue.severity = GetValidValue(severity, DefaultSeverity);
+        issue.screenshotPath = GetValidValue(screenshotPath, string.Empty);
         issue.createdTime = nowTime;
         issue.updatedTime = nowTime;
         issue.sceneName = SceneManager.GetActiveScene().name;
@@ -197,6 +200,9 @@ public class QAIssueDataModule
 
         if (string.IsNullOrWhiteSpace(issue.severity))
             issue.severity = DefaultSeverity;
+
+        if (issue.screenshotPath == null)
+            issue.screenshotPath = string.Empty;
     }
 
     private string GetValidValue(string value, string defaultValue)

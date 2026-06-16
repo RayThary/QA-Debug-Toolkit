@@ -1,0 +1,2 @@
+﻿No	Issue Id	Title	Status	Severity	Created Time	Updated Time	Scene	Scene Time	Screenshot Path	Description
+1	ISSUE_20260616_200556765	213	Open	Medium	2026-06-16 20:05:56	2026-06-16 20:20:36	QAToolkitDemo	00:00	C:\Users\ghfjt\QA Debug Toolkit\QAReports\Screenshots\Screenshot_20260616_200448.png	123

@@ -83,6 +83,7 @@ public class QAIssueStorageModule
             builder.AppendLine("Updated Time : " + issue.updatedTime);
             builder.AppendLine("Scene : " + issue.sceneName);
             builder.AppendLine("Scene Time : " + issue.sceneTime);
+            builder.AppendLine("Screenshot Path : " + issue.screenshotPath);
             builder.AppendLine();
             builder.AppendLine("Description");
             builder.AppendLine(issue.description);
@@ -105,7 +106,7 @@ public class QAIssueStorageModule
 
         StringBuilder builder = new StringBuilder();
 
-        builder.AppendLine("No\tIssue Id\tTitle\tStatus\tSeverity\tCreated Time\tUpdated Time\tScene\tScene Time\tDescription");
+        builder.AppendLine("No\tIssue Id\tTitle\tStatus\tSeverity\tCreated Time\tUpdated Time\tScene\tScene Time\tScreenshot Path\tDescription");
 
         for (int i = 0; i < issues.Count; i++)
         {
@@ -131,6 +132,8 @@ public class QAIssueStorageModule
             builder.Append(CleanSheetCell(issue.sceneName));
             builder.Append('\t');
             builder.Append(CleanSheetCell(issue.sceneTime));
+            builder.Append('\t');
+            builder.Append(CleanSheetCell(issue.screenshotPath));
             builder.Append('\t');
             builder.Append(CleanSheetCell(issue.description));
             builder.AppendLine();
