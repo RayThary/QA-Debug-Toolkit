@@ -20,6 +20,12 @@ public class QAScreenshotGallery : MonoBehaviour
     [SerializeField] private Button screenshotThumbnailTemplateButton;
     [SerializeField] private Button closeGalleryButton;
 
+    [Header("Delete Screenshot UI")]
+    [SerializeField] private GameObject deleteScreenshotConfirmWindow;
+    [SerializeField] private TextMeshProUGUI deleteScreenshotConfirmMessageText;
+    [SerializeField] private Button confirmDeleteScreenshotButton;
+    [SerializeField] private Button cancelDeleteScreenshotButton;
+
     [Header("Reference")]
     [SerializeField] private QAToolkit qaToolkit;
 
@@ -29,9 +35,13 @@ public class QAScreenshotGallery : MonoBehaviour
 
     private readonly List<Sprite> thumbnailSprites = new List<Sprite>();
 
+    private Func<string, int> getScreenshotLinkedIssueCount;
+    private Action<string> onScreenshotDeleted;
+
     private Sprite defaultScreenshotSprite;
     private Sprite selectedPreviewSprite;
     private string selectedScreenshotPath = string.Empty;
+    private string pendingDeleteScreenshotPath = string.Empty;
 
     private void Awake()
     {
@@ -40,6 +50,9 @@ public class QAScreenshotGallery : MonoBehaviour
 
         if (screenshotThumbnailTemplateButton != null)
             screenshotThumbnailTemplateButton.gameObject.SetActive(false);
+
+        if (deleteScreenshotConfirmWindow != null)
+            deleteScreenshotConfirmWindow.SetActive(false);
 
         if (screenshotPreviewImage != null)
             defaultScreenshotSprite = screenshotPreviewImage.sprite;
@@ -54,6 +67,18 @@ public class QAScreenshotGallery : MonoBehaviour
         {
             closeGalleryButton.onClick.RemoveAllListeners();
             closeGalleryButton.onClick.AddListener(CloseGallery);
+        }
+
+        if (confirmDeleteScreenshotButton != null)
+        {
+            confirmDeleteScreenshotButton.onClick.RemoveAllListeners();
+            confirmDeleteScreenshotButton.onClick.AddListener(ConfirmDeleteScreenshot);
+        }
+
+        if (cancelDeleteScreenshotButton != null)
+        {
+            cancelDeleteScreenshotButton.onClick.RemoveAllListeners();
+            cancelDeleteScreenshotButton.onClick.AddListener(CloseDeleteConfirmWindow);
         }
 
         if (clearSelectedScreenshotButton != null)
@@ -75,6 +100,12 @@ public class QAScreenshotGallery : MonoBehaviour
     public string GetSelectedScreenshotPath()
     {
         return selectedScreenshotPath ?? string.Empty;
+    }
+
+    public void SetupDeleteCallbacks(Func<string, int> linkedIssueCountCallback, Action<string> screenshotDeletedCallback)
+    {
+        getScreenshotLinkedIssueCount = linkedIssueCountCallback;
+        onScreenshotDeleted = screenshotDeletedCallback;
     }
 
     public void SetSelectedScreenshotPath(string screenshotPath)
@@ -259,6 +290,125 @@ public class QAScreenshotGallery : MonoBehaviour
 
         thumbnailButton.onClick.RemoveAllListeners();
         thumbnailButton.onClick.AddListener(() => { SelectScreenshot(screenshotPath); });
+
+        Button deleteButton = FindThumbnailDeleteButton(thumbnailButton);
+
+        if (deleteButton != null)
+        {
+            deleteButton.onClick.RemoveAllListeners();
+            deleteButton.onClick.AddListener(() => { OpenDeleteConfirmWindow(screenshotPath); });
+        }
+    }
+
+
+    private Button FindThumbnailDeleteButton(Button thumbnailButton)
+    {
+        if (thumbnailButton == null)
+            return null;
+
+        Transform deleteButtonTransform = thumbnailButton.transform.Find("DeleteButton");
+
+        if (deleteButtonTransform == null)
+            return null;
+
+        return deleteButtonTransform.GetComponent<Button>();
+    }
+
+    private void OpenDeleteConfirmWindow(string screenshotPath)
+    {
+        if (string.IsNullOrWhiteSpace(screenshotPath))
+            return;
+
+        pendingDeleteScreenshotPath = screenshotPath;
+        UpdateDeleteConfirmMessage(screenshotPath);
+
+        if (deleteScreenshotConfirmWindow != null)
+            deleteScreenshotConfirmWindow.SetActive(true);
+    }
+
+    private void CloseDeleteConfirmWindow()
+    {
+        pendingDeleteScreenshotPath = string.Empty;
+
+        if (deleteScreenshotConfirmWindow != null)
+            deleteScreenshotConfirmWindow.SetActive(false);
+    }
+
+    private void UpdateDeleteConfirmMessage(string screenshotPath)
+    {
+        if (deleteScreenshotConfirmMessageText == null)
+            return;
+
+        int linkedIssueCount = 0;
+
+        if (getScreenshotLinkedIssueCount != null)
+            linkedIssueCount = getScreenshotLinkedIssueCount.Invoke(screenshotPath);
+
+        string fileName = Path.GetFileName(screenshotPath);
+
+        if (linkedIssueCount > 0)
+        {
+            deleteScreenshotConfirmMessageText.text = fileName + " is linked to " + linkedIssueCount +
+                " issue(s). Delete this PNG file and clear the linked screenshot path?";
+        }
+        else
+        {
+            deleteScreenshotConfirmMessageText.text = "Delete this screenshot PNG file?\n" + fileName;
+        }
+    }
+
+    private void ConfirmDeleteScreenshot()
+    {
+        string screenshotPath = pendingDeleteScreenshotPath;
+
+        if (string.IsNullOrWhiteSpace(screenshotPath))
+        {
+            CloseDeleteConfirmWindow();
+            return;
+        }
+
+        bool deleteSucceeded = DeleteScreenshotFile(screenshotPath);
+
+        if (deleteSucceeded)
+        {
+            if (IsSameScreenshotPath(selectedScreenshotPath, screenshotPath))
+                SetSelectedScreenshotPath(string.Empty);
+
+            onScreenshotDeleted?.Invoke(screenshotPath);
+            RefreshGallery();
+        }
+
+        CloseDeleteConfirmWindow();
+    }
+
+    private bool DeleteScreenshotFile(string screenshotPath)
+    {
+        try
+        {
+            if (File.Exists(screenshotPath))
+            {
+                File.Delete(screenshotPath);
+                return true;
+            }
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Debug.LogWarning("Failed to delete screenshot file: " + exception.Message);
+            return false;
+        }
+    }
+
+    private bool IsSameScreenshotPath(string firstPath, string secondPath)
+    {
+        if (string.IsNullOrWhiteSpace(firstPath))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(secondPath))
+            return false;
+
+        return string.Equals(firstPath.Trim(), secondPath.Trim(), StringComparison.OrdinalIgnoreCase);
     }
 
     private void SelectScreenshot(string screenshotPath)
@@ -339,7 +489,11 @@ public class QAScreenshotGallery : MonoBehaviour
 
         texture.name = Path.GetFileNameWithoutExtension(filePath);
 
-        Sprite sprite = Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        Sprite sprite = Sprite.Create(
+            texture,
+            new Rect(0f, 0f, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f)
+        );
 
         sprite.name = Path.GetFileNameWithoutExtension(filePath);
 

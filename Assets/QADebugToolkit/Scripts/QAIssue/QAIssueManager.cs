@@ -70,6 +70,8 @@ public class QAIssueManager : MonoBehaviour
 
         viewModule.InitializeIssueButtons(dataModule.Issues);
 
+        SetupScreenshotGalleryCallbacks();
+
         SaveAllIssuesToJson();
 
         isInitialized = true;
@@ -201,6 +203,32 @@ public class QAIssueManager : MonoBehaviour
         viewModule.ShowMessage("Issue Deleted.");
 
         SaveAllIssuesToJson();
+    }
+
+    private void SetupScreenshotGalleryCallbacks()
+    {
+        if (screenshotGallery != null)
+            screenshotGallery.SetupDeleteCallbacks(GetScreenshotLinkedIssueCount, OnScreenshotDeleted);
+    }
+
+    private int GetScreenshotLinkedIssueCount(string screenshotPath)
+    {
+        return dataModule.GetScreenshotLinkedIssueCount(screenshotPath);
+    }
+
+    private void OnScreenshotDeleted(string deletedScreenshotPath)
+    {
+        int clearedIssueCount = dataModule.ClearScreenshotPath(deletedScreenshotPath);
+
+        if (screenshotGallery != null && string.Equals(screenshotGallery.GetSelectedScreenshotPath(), deletedScreenshotPath, System.StringComparison.OrdinalIgnoreCase))
+            screenshotGallery.SetSelectedScreenshotPath(string.Empty);
+
+        SaveAllIssuesToJson();
+
+        if (clearedIssueCount > 0)
+            viewModule.ShowMessage("Screenshot Deleted. Linked issue data updated: " + clearedIssueCount);
+        else
+            viewModule.ShowMessage("Screenshot Deleted.");
     }
 
     private void SetGalleryScreenshotPath(string screenshotPath)

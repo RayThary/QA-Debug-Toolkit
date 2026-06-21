@@ -123,6 +123,54 @@ public class QAIssueDataModule
         issueList.RemoveAt(index);
     }
 
+
+    public int GetScreenshotLinkedIssueCount(string screenshotPath)
+    {
+        if (string.IsNullOrWhiteSpace(screenshotPath))
+            return 0;
+
+        int linkedIssueCount = 0;
+
+        for (int i = 0; i < issueList.Count; i++)
+        {
+            QAIssueData issue = issueList[i];
+
+            if (issue == null)
+                continue;
+
+            if (IsSameScreenshotPath(issue.screenshotPath, screenshotPath))
+                linkedIssueCount++;
+        }
+
+        return linkedIssueCount;
+    }
+
+    public int ClearScreenshotPath(string screenshotPath)
+    {
+        if (string.IsNullOrWhiteSpace(screenshotPath))
+            return 0;
+
+        int clearedIssueCount = 0;
+        string nowTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+        for (int i = 0; i < issueList.Count; i++)
+        {
+            QAIssueData issue = issueList[i];
+
+            if (issue == null)
+                continue;
+
+            if (!IsSameScreenshotPath(issue.screenshotPath, screenshotPath))
+                continue;
+
+            issue.screenshotPath = string.Empty;
+            issue.updatedTime = nowTime;
+            clearedIssueCount++;
+        }
+
+        return clearedIssueCount;
+    }
+
     public bool HasSameTitle(string title, int ignoreIndex)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -148,6 +196,18 @@ public class QAIssueDataModule
         }
 
         return false;
+    }
+
+
+    private bool IsSameScreenshotPath(string firstPath, string secondPath)
+    {
+        if (string.IsNullOrWhiteSpace(firstPath))
+            return false;
+
+        if (string.IsNullOrWhiteSpace(secondPath))
+            return false;
+
+        return string.Equals(firstPath.Trim(), secondPath.Trim(), StringComparison.OrdinalIgnoreCase);
     }
 
     private QAIssueData CreateIssueData(string title, string description, string status, string severity, string screenshotPath)
