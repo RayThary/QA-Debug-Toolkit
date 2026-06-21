@@ -11,6 +11,18 @@
             "sceneName": "QAToolkitDemo",
             "sceneTime": "00:00",
             "screenshotPath": "C:\\Users\\ghfjt\\QA Debug Toolkit\\QAReports\\Screenshots\\Screenshot_20260616_200448.png"
+        },
+        {
+            "issueId": "ISSUE_20260621_144308245",
+            "title": "비활성 테스트용 QAScreenshotGallery 중복 존재로 삭제 확인창 참조 오류 발생",
+            "description": "Screenshot Gallery 삭제 기능 테스트 중 삭제 확인창을 열 때 deleteScreenshotConfirmWindow가 null로 처리되는 문제가 발생했다.\r\n\r\n확인 결과 실제 사용하는 ScreenShotGallery 오브젝트 외에, IssueWindow 하위 ScreenShot 오브젝트에 테스트용 QAScreenshotGallery 컴포넌트가 추가로 남아 있었다.\r\n\r\n연결되지 않은 테스트용 Gallery 인스턴스가 참조되면서 삭제 확인창 UI가 정상적으로 연결되지 않아 null 오류가 발생했다.\r\n\r\n테스트용 QAScreenshotGallery 컴포넌트를 제거하고, 실제 사용하는 ScreenShotGallery 오브젝트 하나만 남기도록 정리했다.",
+            "status": "Open",
+            "severity": "High",
+            "createdTime": "2026-06-21 14:43:08",
+            "updatedTime": "2026-06-21 14:47:39",
+            "sceneName": "QAToolkitDemo",
+            "sceneTime": "00:00",
+            "screenshotPath": ""
         }
     ]
 }

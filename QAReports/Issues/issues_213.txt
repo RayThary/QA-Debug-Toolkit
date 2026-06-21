@@ -3,7 +3,7 @@ Title : 213
 Status : Open
 Severity : Medium
 Created Time : 2026-06-16 20:05:56
-Updated Time : 2026-06-16 20:20:36
+Updated Time : 2026-06-17 22:45:14
 Scene : QAToolkitDemo
 Scene Time : 00:00
 Screenshot Path : C:\Users\ghfjt\QA Debug Toolkit\QAReports\Screenshots\Screenshot_20260616_200448.png

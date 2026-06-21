@@ -42,50 +42,13 @@ public class QAScreenshotGallery : MonoBehaviour
     private Sprite selectedPreviewSprite;
     private string selectedScreenshotPath = string.Empty;
     private string pendingDeleteScreenshotPath = string.Empty;
+    private bool isAttachMode = false;
 
     private void Awake()
     {
-        if (screenshotGalleryWindow != null)
-            screenshotGalleryWindow.SetActive(false);
-
-        if (screenshotThumbnailTemplateButton != null)
-            screenshotThumbnailTemplateButton.gameObject.SetActive(false);
-
-        if (deleteScreenshotConfirmWindow != null)
-            deleteScreenshotConfirmWindow.SetActive(false);
-
-        if (screenshotPreviewImage != null)
-            defaultScreenshotSprite = screenshotPreviewImage.sprite;
-
-        if (screenshotPreviewButton != null)
-        {
-            screenshotPreviewButton.onClick.RemoveAllListeners();
-            screenshotPreviewButton.onClick.AddListener(OpenGallery);
-        }
-
-        if (closeGalleryButton != null)
-        {
-            closeGalleryButton.onClick.RemoveAllListeners();
-            closeGalleryButton.onClick.AddListener(CloseGallery);
-        }
-
-        if (confirmDeleteScreenshotButton != null)
-        {
-            confirmDeleteScreenshotButton.onClick.RemoveAllListeners();
-            confirmDeleteScreenshotButton.onClick.AddListener(ConfirmDeleteScreenshot);
-        }
-
-        if (cancelDeleteScreenshotButton != null)
-        {
-            cancelDeleteScreenshotButton.onClick.RemoveAllListeners();
-            cancelDeleteScreenshotButton.onClick.AddListener(CloseDeleteConfirmWindow);
-        }
-
-        if (clearSelectedScreenshotButton != null)
-        {
-            clearSelectedScreenshotButton.onClick.RemoveAllListeners();
-            clearSelectedScreenshotButton.onClick.AddListener(ClearSelectedScreenshot);
-        }
+        InitializeWindowState();
+        CacheDefaultPreviewSprite();
+        BindButtons();
 
         SetSelectedScreenshotPath(string.Empty);
         RefreshGallery();
@@ -119,18 +82,81 @@ public class QAScreenshotGallery : MonoBehaviour
         UpdateSelectedScreenshotUI();
     }
 
-    public void OpenGallery()
+    public void OpenGalleryForAttach()
     {
-        RefreshGallery();
+        isAttachMode = true;
+        ShowGalleryWindow();
+    }
 
-        if (screenshotGalleryWindow != null)
-            screenshotGalleryWindow.SetActive(true);
+    public void OpenGalleryOnly()
+    {
+        isAttachMode = false;
+        ShowGalleryWindow();
     }
 
     public void CloseGallery()
     {
         if (screenshotGalleryWindow != null)
             screenshotGalleryWindow.SetActive(false);
+    }
+
+    private void InitializeWindowState()
+    {
+        if (screenshotGalleryWindow != null)
+            screenshotGalleryWindow.SetActive(false);
+
+        if (screenshotThumbnailTemplateButton != null)
+            screenshotThumbnailTemplateButton.gameObject.SetActive(false);
+
+        if (deleteScreenshotConfirmWindow != null)
+            deleteScreenshotConfirmWindow.SetActive(false);
+    }
+
+    private void CacheDefaultPreviewSprite()
+    {
+        if (screenshotPreviewImage != null)
+            defaultScreenshotSprite = screenshotPreviewImage.sprite;
+    }
+
+    private void BindButtons()
+    {
+        if (screenshotPreviewButton != null)
+        {
+            screenshotPreviewButton.onClick.RemoveAllListeners();
+            screenshotPreviewButton.onClick.AddListener(OpenGalleryForAttach);
+        }
+
+        if (closeGalleryButton != null)
+        {
+            closeGalleryButton.onClick.RemoveAllListeners();
+            closeGalleryButton.onClick.AddListener(CloseGallery);
+        }
+
+        if (confirmDeleteScreenshotButton != null)
+        {
+            confirmDeleteScreenshotButton.onClick.RemoveAllListeners();
+            confirmDeleteScreenshotButton.onClick.AddListener(ConfirmDeleteScreenshot);
+        }
+
+        if (cancelDeleteScreenshotButton != null)
+        {
+            cancelDeleteScreenshotButton.onClick.RemoveAllListeners();
+            cancelDeleteScreenshotButton.onClick.AddListener(CloseDeleteConfirmWindow);
+        }
+
+        if (clearSelectedScreenshotButton != null)
+        {
+            clearSelectedScreenshotButton.onClick.RemoveAllListeners();
+            clearSelectedScreenshotButton.onClick.AddListener(ClearSelectedScreenshot);
+        }
+    }
+
+    private void ShowGalleryWindow()
+    {
+        RefreshGallery();
+
+        if (screenshotGalleryWindow != null)
+            screenshotGalleryWindow.SetActive(true);
     }
 
     private void RefreshGallery()
@@ -306,12 +332,25 @@ public class QAScreenshotGallery : MonoBehaviour
         if (thumbnailButton == null)
             return null;
 
-        Transform deleteButtonTransform = thumbnailButton.transform.Find("DeleteButton");
+        Button[] buttons = thumbnailButton.GetComponentsInChildren<Button>(true);
 
-        if (deleteButtonTransform == null)
-            return null;
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            Button button = buttons[i];
 
-        return deleteButtonTransform.GetComponent<Button>();
+            if (button == null)
+                continue;
+
+            if (button == thumbnailButton)
+                continue;
+
+            string buttonName = button.gameObject.name;
+
+            if (string.Equals(buttonName, "DeleteButton", StringComparison.OrdinalIgnoreCase))
+                return button;
+        }
+
+        return null;
     }
 
     private void OpenDeleteConfirmWindow(string screenshotPath)
@@ -413,6 +452,9 @@ public class QAScreenshotGallery : MonoBehaviour
 
     private void SelectScreenshot(string screenshotPath)
     {
+        if (!isAttachMode)
+            return;
+
         SetSelectedScreenshotPath(screenshotPath);
         CloseGallery();
     }

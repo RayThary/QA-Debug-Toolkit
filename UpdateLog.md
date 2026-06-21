@@ -1,30 +1,81 @@
 # QA Debug Toolkit Update Log
 
-QA Debug Toolkit의 버전별 업데이트 기록입니다.
+QA Debug Toolkit의 버전별 업데이트 기록입니다.  
 README에는 최신 업데이트 요약만 남기고, 이전 버전의 변경 내역은 이 문서에서 관리합니다.
+
+---
+
+## v1.4.1 - Screenshot Gallery Cleanup
+
+Screenshot Gallery를 포트폴리오 제출용 마감 상태로 정리한 업데이트입니다.  
+기존 Issue Screenshot Attach 기능에 더해, Gallery를 단순 조회용으로도 사용할 수 있도록 Browse / Attach 모드를 분리하고, 저장된 PNG 파일 삭제 흐름을 추가했습니다.
+
+### 추가된 내용
+
+* Screenshot Gallery Browse / Attach 모드 분리
+
+  * Attach Mode: Issue에 스크린샷을 연결하기 위한 모드
+  * Browse Mode: 저장된 스크린샷을 확인하고 삭제하기 위한 모드
+* Overlay에서 Gallery를 직접 열 수 있는 버튼 구조 추가
+* Gallery 썸네일 DeleteButton을 통한 실제 PNG 파일 삭제 기능 추가
+* 스크린샷 삭제 전 확인창 추가
+* 삭제한 스크린샷이 Issue에 연결되어 있을 경우 Screenshot Path 초기화 처리 추가
+* Gallery 단독 조회 시 이미지 클릭으로 Issue 연결 또는 창 닫힘이 발생하지 않도록 처리
+
+### 수정된 내용
+
+* IssueWindow 미리보기 클릭 시 Gallery가 Attach Mode로 열리도록 정리
+* Overlay Gallery 버튼은 Browse Mode로 열리도록 분리
+* 기존 Gallery 열기 흐름을 목적별 메서드로 정리
+
+  * `OpenGalleryForAttach()`
+  * `OpenGalleryOnly()`
+* QAScreenshotGallery의 초기화 및 버튼 바인딩 구조 정리
+
+  * Window 초기 상태 설정
+  * 기본 Preview Sprite 캐싱
+  * Button Listener 연결
+* Thumbnail DeleteButton 탐색 기준을 `DeleteButton` 이름으로 정리
+* 중복 QAScreenshotGallery 컴포넌트로 인해 삭제 확인창 참조가 null로 처리되던 문제 정리
+
+### 업데이트 목적
+
+Screenshot Gallery를 Issue 첨부 전용 기능에서 끝내지 않고, 저장된 스크린샷을 확인하고 관리할 수 있는 독립 기능으로 정리했습니다.
+
+또한 갤러리를 여는 목적을 Attach / Browse로 나누어, Issue에 스크린샷을 연결하는 흐름과 단순히 Gallery를 확인하는 흐름이 서로 섞이지 않도록 개선했습니다.
 
 ---
 
 ## v1.4 - Issue Screenshot Attach
 
-Issue에 스크린샷을 직접 연결할 수 있도록 Screenshot Attach 기능을 추가한 업데이트입니다.
-기존 Issue 기록이 텍스트 중심이었다면, v1.4에서는 저장된 스크린샷을 Gallery에서 선택해 Issue와 연결하고,
-이후 저장 / 로드 / Export 흐름에서도 스크린샷 경로를 함께 관리할 수 있도록 확장했습니다.
+Issue에 스크린샷을 연결하여 QA 이슈 기록의 재현성과 확인성을 높이기 위한 업데이트입니다.  
+기존에는 Screenshot 저장과 Issue 기록이 분리되어 있었지만, v1.4에서는 저장된 PNG 스크린샷을 Issue에 첨부하고 Save / Load / Export 흐름까지 유지되도록 확장했습니다.
 
 ### 추가된 내용
 
 * IssueWindow에 스크린샷 미리보기 영역 추가
-* 미리보기 영역 클릭 시 Screenshot Gallery 창 열림
-* Screenshot Gallery에서 저장된 PNG 스크린샷 목록 표시
-* Grid Layout 기반으로 스크린샷 썸네일 표시
-* 스크린샷 선택 시 현재 Issue에 `screenshotPath` 연결
+* 스크린샷 미리보기 클릭 시 Screenshot Gallery 창 열림
+* 저장된 PNG 스크린샷을 Gallery에서 Grid 형태로 표시
+* Gallery에서 스크린샷 선택 시 현재 Issue에 연결
 * 선택된 스크린샷 파일명 표시 기능 추가
-* Clear 버튼으로 현재 Issue와 연결된 스크린샷 해제 기능 추가
-* Clear 시 실제 PNG 파일은 삭제하지 않고 Issue 연결만 해제
+* Clear 버튼으로 Issue와 연결된 스크린샷 해제 기능 추가
+* Issue 데이터에 `screenshotPath` 추가
 * Issue Save / Load 시 `screenshotPath` 유지
-* Issue TXT Export에 Screenshot Path 출력 추가
-* Issue TSV Export에 Screenshot Path 컬럼 추가
+* Issue TXT / TSV Export에 Screenshot Path 출력 추가
+* Screenshot Gallery에서 현재 저장 폴더와 Unity 기본 저장 폴더의 PNG 조회 지원
 
+### 수정된 내용
+
+* Clear 시 실제 PNG 파일은 삭제하지 않고 Issue 연결만 해제하도록 처리
+* Screenshot Preview Sprite 갱신 시 기존 Preview Sprite 정리 처리
+* Screenshot Gallery 관련 책임을 QAScreenshotGallery 쪽으로 분리
+* QAIssueViewModule이 Gallery 내부 UI를 직접 제어하지 않도록 정리
+
+### 업데이트 목적
+
+QA 이슈를 기록할 때 텍스트 설명만 남기는 것이 아니라, 실제 발생 화면을 함께 연결할 수 있도록 개선했습니다.
+
+이를 통해 Issue 기록의 재현 근거를 강화하고, TXT / TSV Export에서도 연결된 Screenshot Path를 확인할 수 있도록 구성했습니다.
 
 ---
 
@@ -193,13 +244,3 @@ Unity 런타임 환경에서 QA 테스트 중 필요한 정보 확인, 스크린
 
 게임 실행 중 QA 테스트에 필요한 정보를 빠르게 확인하고,
 발견한 이슈를 프로젝트 내부에서 바로 기록할 수 있는 기본 툴킷을 만드는 것을 목표로 했습니다.
-
----
-
-### v1.4.1 후보
-
-* Screenshot Gallery 기능을 기본 기능으로 분리
-* Issue Screenshot Attach 외에도 재사용 가능한 Gallery 구조 정리
-* Gallery UI 템플릿 및 기본 설정 정리
-* Screenshot Gallery 경로 조회 / 썸네일 생성 로직 안정화
-* Issue Screenshot Attach 관련 코드 정리 및 Inspector 연결 구조 보완

@@ -122,6 +122,18 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 
 ## 최신 업데이트
 
+### v1.4.1 - Screenshot Gallery Cleanup
+
+* Screenshot Gallery Browse / Attach 모드 분리
+* Overlay에서 Gallery를 직접 열 수 있는 버튼 구조 추가
+* IssueWindow 미리보기 클릭 시 Attach 모드로 Gallery 열기
+* Browse 모드에서는 이미지 클릭 시 Issue 연결 및 창 닫힘이 발생하지 않도록 처리
+* Gallery 썸네일 DeleteButton을 통한 실제 PNG 파일 삭제 기능 추가
+* 스크린샷 삭제 전 확인창 표시
+* 삭제된 스크린샷이 Issue에 연결되어 있을 경우 Screenshot Path 초기화
+* 중복 QAScreenshotGallery 컴포넌트로 인한 참조 오류 정리
+* QAScreenshotGallery 초기화 및 버튼 바인딩 구조 정리
+
 ### v1.4 - Issue Screenshot Attach
 
 * Issue에 스크린샷 첨부 기능 추가
@@ -135,7 +147,5 @@ Unity 클라이언트 개발 및 QA 포트폴리오를 목적으로 제작했습
 * Issue Save / Load 시 `screenshotPath` 유지
 * Issue TXT / TSV Export에 Screenshot Path 출력 추가
 * Screenshot Gallery에서 현재 저장 폴더와 Unity 기본 저장 폴더의 PNG 조회 지원
-
-
 
 이전 버전 및 전체 업데이트 기록은 `UpdateLog.md`에서 관리합니다.
